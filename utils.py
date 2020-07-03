@@ -331,7 +331,9 @@ def get_tile_map_transformer(tile_path, map_path):
 
 def get_fmc_functor():
     # Load FMC table
-    fmc = np.load("./FMC.npy")
+    #fmc = np.load("./FMC.npy")
+    fmc_read=pandas.read_excel("LUT_sentinel-2.xlsx")
+    fmc=fmc_read['fmc'].to_numpy()
     
     def get_fmc(idxs, fmc=fmc):
         # Select Veg type subset from LUT table
@@ -352,8 +354,13 @@ def get_vegtype_idx(veg_type):
 
 def get_top_n_functor():
     # Read the LUT table
-    lut = np.load("./LUT.npy")
-    lut = lut[:, [0,1,3,5,6,7]]
+    #lut = np.load("./LUT.npy")
+    #lut = lut[:, [0,1,3,5,6,7]]
+    lut_read=pandas.read_excel("LUT_sentinel-2.xlsx")
+    #converttonumpy read only 7 bands
+    lut_np=lut_read[[490,560,665,842,865,1610,2190]].to_numpy()
+    #This is not necessary but just in case
+    lut = lut_np[:, [0,1,2,3,4,5,6]]
 
     lut_sq = np.sqrt(np.einsum('ij,ij->i',lut, lut))
 
